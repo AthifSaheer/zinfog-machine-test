@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %} Signup {% endblock title %}
+
+{% block content %}
+
+    <br>
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form method="POST">
+                    {% csrf_token%}
+
+                    <h4 class="text-center">Signup </h4>
+                    <small class="text-danger">{{ error }}</small>
+
+                    {% if field.errors %} {% for error in field.errors %}
+                        <p style="font-size: 13px;">
+                            {{ error|escape }}
+                        </p>
+                    {% endfor %} {% endif %}
+
+                    <div class="form-group mt-2">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
+                        <small class="text-danger" id="uname-required">Username required</small>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" class="form-control" id="" placeholder="Email" required>
+                        <small class="text-danger" id="email-required">Email required</small>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="phone">Phone number</label>
+                        <input type="number" name="phone" class="form-control" id="phone" placeholder="Phone number" required>
+                        <small class="text-danger" id="phone-required">Phone required</small>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" name="dob" class="form-control" id="dob" placeholder="Date of Birth" required>
+                        <small class="text-danger" id="dob-required">Date of birth required</small>
+                    </div>
+                    
+                    <div class="form-group mt-2">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                        <small class="text-danger" id="pword-required">Password required</small>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="password_confirmation">Confirm password</label>
+                        <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Confirm Password" required>
+                        <small class="text-danger" id="confrm-pword-required">Password required</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-info w-100 mt-3" onclick="signupBtn()">Submit</button>
+                </form>
+                <a href="{% url 'login' %}" >I've an account!</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var loginUnameRequiredx = document.getElementById("uname-required")
+        var loginPasswordRequiredx = document.getElementById("pword-required")
+        var loginEmailRequiredx = document.getElementById("email-required")
+        var loginConfrmPasswordRequiredx = document.getElementById("confrm-pword-required")
+        var phoneNumberReqrd = document.getElementById("phone-required")
+        var DOBReqrd = document.getElementById("dob-required")
+            
+        loginUnameRequiredx.style.display = 'none';
+        loginEmailRequiredx.style.display = 'none';
+        loginPasswordRequiredx.style.display = 'none';
+        loginConfrmPasswordRequiredx.style.display = 'none';
+        phoneNumberReqrd.style.display = 'none';
+        DOBReqrd.style.display = 'none';
+        
+        function signupBtn() {
+            var loginUsernameInput = document.getElementById('username').value;
+            var loginUnameRequired = document.getElementById("uname-required")
+
+            var loginPasswordInput = document.getElementById('password').value;
+            var loginPasswordRequired = document.getElementById("pword-required")
+            
+            var loginConfrmPasswordInput = document.getElementById('password_confirmation').value;
+            var loginConfrmPasswordRequired = document.getElementById("confrm-pword-required")
+            
+            var loginEmailInput = document.getElementById('email');
+            var loginEmailRequired = document.getElementById("email-required")
+
+            var phoneNumberInput = document.getElementById('phone').value;
+            var DOBInput = document.getElementById('dob').value;
+            
+            if (loginUsernameInput == "") {
+                loginUnameRequired.style.display = 'block'
+            } else {
+                loginUnameRequired.style.display = 'none';
+            }
+            
+            if (loginPasswordInput == "") {
+                loginPasswordRequired.style.display = 'block'
+            }else {
+                loginPasswordRequired.style.display = 'none'
+            }
+
+            if (loginConfrmPasswordInput == "") {
+                loginConfrmPasswordRequired.style.display = 'block'
+            } else {
+                loginConfrmPasswordRequired.style.display = 'none';
+            }
+
+            if (loginEmailInput == null) {
+                loginEmailRequired.style.display = 'block'
+            } else {
+                loginEmailRequired.style.display = 'none';
+            }
+
+            if (phoneNumberInput == "") {
+                phoneNumberReqrd.style.display = 'block'
+            } else {
+                phoneNumberReqrd.style.display = 'none';
+            }
+
+            if (DOBInput == "") {
+                DOBReqrd.style.display = 'block'
+            } else {
+                DOBReqrd.style.display = 'none';
+            }
+
+        }
+    </script>
+
+{% endblock %}
