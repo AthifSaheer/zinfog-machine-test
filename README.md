@@ -53,6 +53,6 @@ Go to lading page then you can see overview of all apis.
 
 2. Go to user side
     ```sh
-    Username: user
-    Password: Xzaq123
+    Username: newuser
+    Password: Xzaq1@34
     ```
