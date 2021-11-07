@@ -18,7 +18,6 @@ def login(request):
         user = request.POST.get('username')
         password = request.POST.get('password')
         auth_user = auth.authenticate(username=user, password=password)
-        print("----------", auth_user)
         if auth_user is not None:
             usr = User.objects.get(username=user)
             auth_login(request, usr)
@@ -52,3 +51,45 @@ def register(request):
 def logout(request):
     auth_logout(request)
     return redirect('login')
+
+def update_personal_details(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            print("---user1---", request.user)
+            account = Account.objects.get(user=request.user)
+            day = account.dob.strftime('%d')
+            month = account.dob.strftime('%m')
+            year = account.dob.strftime('%Y')
+            context = {
+                'account': account,
+                'day': day,
+                'month': month,
+                'year': year,
+            }
+            return render(request, 'update_personal_details.html', context)
+        else:
+            return redirect('login')
+            
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        dob = request.POST.get('dob')
+
+        user = User.objects.filter(username=username)
+
+        if user.count() > 1:
+            return render(request, 'update_personal_details.html', {'error': "Username already exists!"})
+        else:
+            try:
+                user = User.objects.get(username=username)
+                user.username = username
+                user.email = email
+                user.save()
+                account = Account.objects.get(user=user)
+                account.phone = phone
+                account.dob = dob
+                account.save()
+                return redirect('dashboard')
+            except:
+                return render(request, 'update_personal_details.html', {'error': "Something went wrong!"})
