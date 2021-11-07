@@ -31,3 +31,7 @@ class ProfileImage(models.Model):
    
     def __str__(self):
         return str(self.user.username)
+    
+    # def save(self, *args, **kwargs):
+    #     self.user = request.user.username
+    #     super().save(*args, **kwargs)

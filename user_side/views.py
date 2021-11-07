@@ -104,12 +104,17 @@ def profile(request, id):
     if request.method == 'GET':
         form = ProfileImageForm()
         try:
-            account = Student.objects.get(user=id)
-            dob_year = account.dob.strftime('%Y')
+            profile = ProfileImage.objects.get(user=id)
+        except ProfileImage.DoesNotExist:
+            profile = None
+        try:
+            student = Student.objects.get(user=id)
+            dob_year = student.dob.strftime('%Y')
             current_year = datetime.now().year
             age = int(current_year) - int(dob_year)
             context = {
-                'account': account,
+                'student': student,
+                'profile': profile,
                 "age": age,
                 'form': form,
             }
@@ -117,19 +122,19 @@ def profile(request, id):
         except:
             print("=====age---")
             return render(request, 'user/profile.html')
+
     if request.method == 'POST':
-        # image = request.FILES['image']
-        # prf_img = ProfileImage()
-        # prf_img.user = request.user
-        # prf_img.image = image
-        # prf_img.save()
-        form = ProfileImageForm(request.POST, request.FILES)
+        data = request.POST.copy()
+        data['user'] = User.objects.get(id=id)
+        form = ProfileImageForm(data, request.FILES)
         if form.is_valid():
             form.save()
         
-        prf_img = ProfileImage.objects.all().order_by('-id').first()
+        prf_img = ProfileImage.objects.get(user=id)
         w, h = get_image_dimensions(prf_img.image)
         print("Image---wh--", w, h)
+        return render(request, 'user/profile.html')
+
     #    if w != 100:
         #    raise forms.ValidationError("The image is %i pixel wide. It's supposed to be 100px" % w)
     #    if h != 200:

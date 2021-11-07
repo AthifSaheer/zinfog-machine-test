@@ -5,5 +5,5 @@ from .models import *
 class ProfileImageForm(forms.ModelForm):
    class Meta:
        model = ProfileImage
-       fields = ['image']
-    #    fields = '__all__'
+    #    fields = ['image']
+       fields = '__all__'
