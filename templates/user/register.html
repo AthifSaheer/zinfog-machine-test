@@ -131,21 +131,7 @@
             }
 
         }
-
-        function passwordFunction() {
-            var numbers = /^[0-9]+$/;
-            var letters = /^[A-Za-z]+$/;
-            var letterNumber = /^[0-9a-zA-Z]+$/;
-            var symbol = /^[a-zA-Z0-9.]+@/;
-
-            var loginPasswordInput = document.getElementById('password').value;
-
-            if (!loginPasswordInput.match(letterNumber)) {
-                loginPasswordRequired.style.display = 'block'
-                document.getElementById("regstr_btn").disabled = true
-            }
-        }
-        passwordFunction()
+        
     </script>
 
 {% endblock %}

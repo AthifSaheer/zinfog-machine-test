@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, auth
 from django.shortcuts import render, redirect
 from datetime import datetime
 from .models import *
-
+import re
 
 def dashboard(request):
     if request.method == 'GET':
@@ -39,7 +39,43 @@ def register(request):
         phone = request.POST.get('phone')
         dob = request.POST.get('dob')
         password = request.POST.get('password')
+        password_confirmation = request.POST.get('password_confirmation')
 
+        if password != password_confirmation:
+            print("--password--", password)
+            print("--password_confirmation--", password_confirmation)
+            error = "Password did not match!"
+            return render(request, 'user/register.html', {'error': error})
+            
+        flag = 0
+        while True:  
+            if (len(password)<8):
+                flag = 1
+                break
+            elif not re.search("[a-z]", password):
+                flag = 1
+                break
+            elif not re.search("[A-Z]", password):
+                flag = 1
+                break
+            elif not re.search("[0-9]", password):
+                flag = 1
+                break
+            elif not re.search("[_@$]", password):
+                flag = 1
+                break
+            elif re.search("\s", password):
+                flag = 1
+                break
+            else:
+                flag = 0
+                print("Valid Password")
+                break
+        
+        if flag ==1:
+            error = "Not valid password(At Least 8 characters including numbers symbols,upper and lower characters)"
+            return render(request, 'user/register.html', {'error': error})
+            
         if User.objects.filter(username=username):
             return render(request, 'user/register.html', {'error': "Username already exists!"})
         else:
