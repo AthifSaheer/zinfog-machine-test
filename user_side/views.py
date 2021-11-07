@@ -43,14 +43,14 @@ def register(request):
         if User.objects.filter(username=username):
             return render(request, 'user/register.html', {'error': "Username already exists!"})
         else:
-            # try:
+            try:
                 user = User.objects.create_user(username=username, email=email, password=password)
                 Student.objects.create(user=user, phone=phone, dob=dob)
                 usr = User.objects.get(username=user)
                 auth_login(request, usr)
                 return redirect('dashboard')
-            # except:
-            #     return render(request, 'user/register.html', {'error': "Something went wrong!"})
+            except:
+                return render(request, 'user/register.html', {'error': "Something went wrong!"})
 
     return render(request, 'user/register.html')
 
