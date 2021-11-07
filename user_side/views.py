@@ -4,6 +4,13 @@ from django.contrib.auth.models import User, auth
 from .models import *
 
 def dashboard(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            print("---user1---", request.user)
+            account = Account.objects.get(user=request.user)
+            return render(request, 'dashboard.html', {"account": account})
+        else:
+            return redirect('login')
     return render(request, 'dashboard.html')
     
 def login(request):
