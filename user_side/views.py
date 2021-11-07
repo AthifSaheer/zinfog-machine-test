@@ -11,10 +11,10 @@ def dashboard(request):
         if request.user.is_authenticated:
             print("---user1---", request.user)
             account = Account.objects.get(user=request.user)
-            return render(request, 'dashboard.html', {"account": account})
+            return render(request, 'user/dashboard.html', {"account": account})
         else:
             return redirect('login')
-    return render(request, 'dashboard.html')
+    return render(request, 'user/dashboard.html')
     
 def login(request):
     if request.method == 'POST':
@@ -27,9 +27,9 @@ def login(request):
             # iflogout usr.is_superuser == True:
             return redirect('dashboard')
         else:
-            return render(request, 'login.html', {'error': "Invalid credentials"})
+            return render(request, 'user/login.html', {'error': "Invalid credentials"})
                 
-    return render(request, 'login.html')
+    return render(request, 'user/login.html')
 
 def register(request):
     if request.method == 'POST':
@@ -40,16 +40,16 @@ def register(request):
         password = request.POST.get('password')
 
         if User.objects.filter(username=username):
-            return render(request, 'register.html', {'error': "Username already exists!"})
+            return render(request, 'user/register.html', {'error': "Username already exists!"})
         else:
             try:
                 user = User.objects.create_user(username=username, email=email, password=password)
                 Account.objects.create(user=user, phone=phone, dob=dob)
                 return redirect('dashboard')
             except:
-                return render(request, 'register.html', {'error': "Something went wrong!"})
+                return render(request, 'user/register.html', {'error': "Something went wrong!"})
 
-    return render(request, 'register.html')
+    return render(request, 'user/register.html')
 
 def logout(request):
     auth_logout(request)
@@ -69,7 +69,7 @@ def update_personal_details(request):
                 'month': month,
                 'year': year,
             }
-            return render(request, 'update_personal_details.html', context)
+            return render(request, 'user/update_personal_details.html', context)
         else:
             return redirect('login')
             
@@ -82,7 +82,7 @@ def update_personal_details(request):
         user = User.objects.filter(username=username)
 
         if user.count() > 1:
-            return render(request, 'update_personal_details.html', {'error': "Username already exists!"})
+            return render(request, 'user/update_personal_details.html', {'error': "Username already exists!"})
         else:
             try:
                 user = User.objects.get(username=request.user.username)
@@ -95,7 +95,7 @@ def update_personal_details(request):
                 account.save()
                 return redirect('dashboard')
             except:
-                return render(request, 'update_personal_details.html', {'error': "Something went wrong!"})
+                return render(request, 'user/update_personal_details.html', {'error': "Something went wrong!"})
 
 def profile(request, id):
     if request.method == 'GET':
@@ -110,10 +110,10 @@ def profile(request, id):
                 "age": age,
                 'form': form,
             }
-            return render(request, 'profile.html', context)
+            return render(request, 'user/profile.html', context)
         except:
             print("=====age---")
-            return render(request, 'profile.html')
+            return render(request, 'user/profile.html')
     if request.method == 'POST':
         # image = request.FILES['image']
         # prf_img = ProfileImage()
@@ -134,5 +134,5 @@ def profile(request, id):
 
 # def upload_image(request):
 #     account = Account.objects.get(user=id)
-#     return render(request, 'profile.html', {'account': account})
+#     return render(request, 'user/profile.html', {'account': account})
 
