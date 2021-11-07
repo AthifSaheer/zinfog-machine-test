@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User, auth
+from django.shortcuts import render, redirect
+from datetime import datetime, timedelta
 from .models import *
+from .forms import *
 
 def dashboard(request):
     if request.method == 'GET':
@@ -82,7 +85,7 @@ def update_personal_details(request):
             return render(request, 'update_personal_details.html', {'error': "Username already exists!"})
         else:
             try:
-                user = User.objects.get(username=username)
+                user = User.objects.get(username=request.user.username)
                 user.username = username
                 user.email = email
                 user.save()
@@ -93,3 +96,43 @@ def update_personal_details(request):
                 return redirect('dashboard')
             except:
                 return render(request, 'update_personal_details.html', {'error': "Something went wrong!"})
+
+def profile(request, id):
+    if request.method == 'GET':
+        form = ProfileImageForm()
+        try:
+            account = Account.objects.get(user=id)
+            dob_year = account.dob.strftime('%Y')
+            current_year = datetime.now().year
+            age = int(current_year) - int(dob_year)
+            context = {
+                'account': account,
+                "age": age,
+                'form': form,
+            }
+            return render(request, 'profile.html', context)
+        except:
+            print("=====age---")
+            return render(request, 'profile.html')
+    if request.method == 'POST':
+        # image = request.FILES['image']
+        # prf_img = ProfileImage()
+        # prf_img.user = request.user
+        # prf_img.image = image
+        # prf_img.save()
+        form = ProfileImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        
+        prf_img = ProfileImage.objects.all().order_by('-id').first()
+        w, h = get_image_dimensions(prf_img.image)
+        print("Image---wh--", w, h)
+    #    if w != 100:
+        #    raise forms.ValidationError("The image is %i pixel wide. It's supposed to be 100px" % w)
+    #    if h != 200:
+        #    raise forms.ValidationError("The image is %i pixel high. It's supposed to be 200px" % h)
+
+# def upload_image(request):
+#     account = Account.objects.get(user=id)
+#     return render(request, 'profile.html', {'account': account})
+
