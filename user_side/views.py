@@ -133,14 +133,9 @@ def profile(request, id):
         prf_img = ProfileImage.objects.get(user=id)
         w, h = get_image_dimensions(prf_img.image)
         print("Image---wh--", w, h)
+
+        if w != 300:
+            return render(request, 'user/profile.html', {'error': "Image should be 300x356!"})
+        if h != 356:
+            return render(request, 'user/profile.html', {'error': "Image should be 300x356!"})
         return render(request, 'user/profile.html')
-
-    #    if w != 100:
-        #    raise forms.ValidationError("The image is %i pixel wide. It's supposed to be 100px" % w)
-    #    if h != 200:
-        #    raise forms.ValidationError("The image is %i pixel high. It's supposed to be 200px" % h)
-
-# def upload_image(request):
-#     account = Account.objects.get(user=id)
-#     return render(request, 'user/profile.html', {'account': account})
-
