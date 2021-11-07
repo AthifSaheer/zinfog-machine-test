@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'user/base.html' %}
 {% block title %} Signup {% endblock title %}
 
 {% block content %}
@@ -34,7 +34,7 @@
 
                     <div class="form-group mt-2">
                         <label for="phone">Phone number</label>
-                        <input type="number" name="phone" class="form-control" id="phone" placeholder="Phone number" required>
+                        <input type="number" name="phone" class="form-control" id="phone" placeholder="Phone number" required min="10">
                         <small class="text-danger" id="phone-required">Phone required</small>
                     </div>
 

@@ -1,0 +1,28 @@
+{% extends 'admin_panel/base.html' %}
+{% block title %} Dashboard {% endblock title %}
+{% block content %}
+   
+    <div class="nav_bar">
+        <a href="{% url 'admin_logout' %}" style="float: right;"
+         class="m-2 mx-5"><h5>logout</h5></a>
+    </div>
+
+    <div class="container mt-4">
+
+        <ul class="list-group">
+            <li class="list-group-item">Change mark of <span class="text-primary">{{ student.user.username }}</span>.</li>
+            <li class="list-group-item">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button class="btn btn-primary">Submit</button>
+                </form>
+                <a href="{% url 'admin_dashboard' %}">Back to dashboard</a>
+            </li>
+        </ul>
+
+        
+        
+    </div>
+
+{% endblock %}

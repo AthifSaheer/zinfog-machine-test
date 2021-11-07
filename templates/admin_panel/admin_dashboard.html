@@ -1,0 +1,41 @@
+{% extends 'admin_panel/base.html' %}
+{% block title %} Dashboard {% endblock title %}
+{% block content %}
+   
+    <div class="nav_bar">
+        <a href="{% url 'admin_logout' %}" style="float: right;"
+         class="m-2 mx-5"><h5>logout</h5></a>
+    </div>
+
+    <div class="container mt-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone number</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Mark</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for std in student %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ std.user.username }}</td>
+                        <td>{{ std.user.email }}</td>
+                        <td>{{ std.phone }}</td>
+                        <td>{{ std.age }}</td>
+                        <td>{{ std.mark }}</td>
+                        <td>
+                            <a href="{% url 'edit_student' std.user.id %}">Edit mark</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

@@ -2,16 +2,18 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User, auth
 from django.shortcuts import render, redirect
-from datetime import datetime, timedelta
+from datetime import datetime
 from .models import *
 from .forms import *
 
 def dashboard(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            print("---user1---", request.user)
-            account = Account.objects.get(user=request.user)
-            return render(request, 'user/dashboard.html', {"account": account})
+            try:
+                account = Student.objects.get(user=request.user)
+                return render(request, 'user/dashboard.html', {"account": account})
+            except Student.DoesNotExist:
+                return redirect('login')
         else:
             return redirect('login')
     return render(request, 'user/dashboard.html')
@@ -24,7 +26,6 @@ def login(request):
         if auth_user is not None:
             usr = User.objects.get(username=user)
             auth_login(request, usr)
-            # iflogout usr.is_superuser == True:
             return redirect('dashboard')
         else:
             return render(request, 'user/login.html', {'error': "Invalid credentials"})
@@ -42,12 +43,14 @@ def register(request):
         if User.objects.filter(username=username):
             return render(request, 'user/register.html', {'error': "Username already exists!"})
         else:
-            try:
+            # try:
                 user = User.objects.create_user(username=username, email=email, password=password)
-                Account.objects.create(user=user, phone=phone, dob=dob)
+                Student.objects.create(user=user, phone=phone, dob=dob)
+                usr = User.objects.get(username=user)
+                auth_login(request, usr)
                 return redirect('dashboard')
-            except:
-                return render(request, 'user/register.html', {'error': "Something went wrong!"})
+            # except:
+            #     return render(request, 'user/register.html', {'error': "Something went wrong!"})
 
     return render(request, 'user/register.html')
 
@@ -59,7 +62,7 @@ def update_personal_details(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
             print("---user1---", request.user)
-            account = Account.objects.get(user=request.user)
+            account = Student.objects.get(user=request.user)
             day = account.dob.strftime('%d')
             month = account.dob.strftime('%m')
             year = account.dob.strftime('%Y')
@@ -89,7 +92,7 @@ def update_personal_details(request):
                 user.username = username
                 user.email = email
                 user.save()
-                account = Account.objects.get(user=user)
+                account = Student.objects.get(user=user)
                 account.phone = phone
                 account.dob = dob
                 account.save()
@@ -101,7 +104,7 @@ def profile(request, id):
     if request.method == 'GET':
         form = ProfileImageForm()
         try:
-            account = Account.objects.get(user=id)
+            account = Student.objects.get(user=id)
             dob_year = account.dob.strftime('%Y')
             current_year = datetime.now().year
             age = int(current_year) - int(dob_year)
