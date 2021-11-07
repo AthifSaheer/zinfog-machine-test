@@ -14,11 +14,11 @@ class Student(models.Model):
         return str(self.user.username)
     
     def save(self, *args, **kwargs):
-        # if self.age == 0:
-        #     dob_year = self.dob.split('-')
-        # else:
-            # dob_year = self.dob.strftime('%d')
-        dob_year = self.dob.split('-')
+        if self.age == 0:
+            dob_year = self.dob.split('-')
+        else:
+            dob_year = self.dob.strftime('%Y')
+        # dob_year = self.dob.split('-')
         current_year = datetime.now().year
         age = int(current_year) - int(dob_year[0])
         self.age = age

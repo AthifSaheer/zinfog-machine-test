@@ -39,13 +39,15 @@ def admin_logout(request):
 def edit_student(request, id):
     if request.method == 'GET':
         student = Student.objects.get(user=id)
-        form = StudentForm(instance=student)
-        return render(request, 'admin_panel/edit_student.html', {'form': form, "student": student})
+        # form = StudentForm(instance=student)
+        return render(request, 'admin_panel/edit_student.html', {"student": student})
+
     if request.method == 'POST':
-        student = Student.objects.get(user=id)
-        form = StudentForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
+        try:
+            mark = request.POST.get('mark')
+            student = Student.objects.get(user=id)
+            student.mark = mark
+            student.save()
             return redirect('admin_dashboard')
-        else:
-            return render(request, 'admin_panel/edit_student.html', {'form': form})
+        except:
+            return redirect('admin_dashboard')
