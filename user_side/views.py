@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, auth
 from django.shortcuts import render, redirect
 from datetime import datetime
 from .models import *
-from .forms import *
+
 
 def dashboard(request):
     if request.method == 'GET':
@@ -13,7 +13,7 @@ def dashboard(request):
                 account = Student.objects.get(user=request.user)
                 return render(request, 'user/dashboard.html', {"account": account})
             except Student.DoesNotExist:
-                return redirect('login')
+                return render(request, 'user/login.html', {"error": "This username doesn't exist in student table, Plz logout!"})
         else:
             return redirect('login')
     return render(request, 'user/dashboard.html')
@@ -102,7 +102,6 @@ def update_personal_details(request):
 
 def profile(request, id):
     if request.method == 'GET':
-        form = ProfileImageForm()
         try:
             profile = ProfileImage.objects.get(user=id)
         except ProfileImage.DoesNotExist:
@@ -116,26 +115,29 @@ def profile(request, id):
                 'student': student,
                 'profile': profile,
                 "age": age,
-                'form': form,
             }
             return render(request, 'user/profile.html', context)
         except:
-            print("=====age---")
             return render(request, 'user/profile.html')
 
-    if request.method == 'POST':
-        data = request.POST.copy()
-        data['user'] = User.objects.get(id=id)
-        form = ProfileImageForm(data, request.FILES)
-        if form.is_valid():
-            form.save()
-        
-        prf_img = ProfileImage.objects.get(user=id)
-        w, h = get_image_dimensions(prf_img.image)
-        print("Image---wh--", w, h)
 
-        if w != 300:
-            return render(request, 'user/profile.html', {'error': "Image should be 300x356!"})
-        if h != 356:
-            return render(request, 'user/profile.html', {'error': "Image should be 300x356!"})
-        return render(request, 'user/profile.html')
+def upload_image(request):
+    if request.method == 'GET':
+        return render(request, 'user/upload_image.html')
+    
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        w, h = get_image_dimensions(image)
+        print('Image dimensions-----', w, h)
+
+        if w != 300 or h != 356:
+            return render(request, 'user/upload_image.html', {'error': 'Invalid image size. only allowed 300x356.'})
+
+        if ProfileImage.objects.filter(user=request.user):
+            prf_img = ProfileImage.objects.get(user=request.user)
+        else:
+            prf_img = ProfileImage()
+        prf_img.user = request.user
+        prf_img.image = image
+        prf_img.save()
+        return redirect('profile', request.user.id)

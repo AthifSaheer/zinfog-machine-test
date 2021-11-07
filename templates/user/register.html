@@ -141,6 +141,7 @@
             var loginPasswordInput = document.getElementById('password').value;
 
             if (!loginPasswordInput.match(letterNumber)) {
+                loginPasswordRequired.style.display = 'block'
                 document.getElementById("regstr_btn").disabled = true
             }
         }

@@ -1,0 +1,30 @@
+{% extends 'user/base.html' %}
+{% block title %} Profile {% endblock title %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card" style="width: 25rem; margin: auto;">
+        <div class="card-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                <h5>Upload Image</h5>
+                <small class="text-danger">{{ error }}</small>
+                {% csrf_token %}
+                <input type="file" onchange="encodeImageFileAsURL(this)" name="image" accept="image/*" required="" id="id_image">
+                
+                <div class="d-flex">
+                    <div>
+                        <button type="submit" class="btn btn-outline-info btn-sm mt-3 mx-1 btn-block">Submit</button>
+                    </div>
+                    <div>
+                        <a href="{% url 'profile' request.user.id %}" class="btn btn-outline-success btn-sm mt-3 btn-block">Cancel</a>
+                    </div> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

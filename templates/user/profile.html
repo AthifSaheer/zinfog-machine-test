@@ -6,29 +6,22 @@
 <div class="container mt-4">
 
 
-    <div class="card" style="width: 22rem;">
+    <div class="card" style="width: 22rem; margin: auto;">
         <div class="card-body">
             
             {% if profile.image %}
-                <img src="/media/{{ profile.image }}" alt="" width="300" height="350" style="border-radius: 50%;">
+                <img src="/media/{{ profile.image }}" alt="" width="300" height="350" style="border-radius: 40%;">
             {% else %}
                 <img src="/static/img/avatar.jpg" alt="" width="300" height="350" style="border-radius: 50%;">
             {% endif %}
             
-            <p class="text-primary" onclick="editImge()" style="float: right; cursor: pointer;">Edit image</p>
-            
-            <form action="" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form }}
-                <input type="file" id="id_image"  hidden="true" name="image" onchange="submitImage()" accept="image/*">
-                <button id="submtbtn">submit</button>
-            </form>
-            
-            <small class="text-danger">{{ error }}</small>
+            <a href="{% url 'upload_image' %}">
+                <p class="text-primary" style="float: right; cursor: pointer;">Edit image</p>
+            </a>
             
         </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><span class="font-weight-bold">Name:</span> {{account.user.username}}</li>
+                <li class="list-group-item"><span class="font-weight-bold">Name:</span> {{student.user.username}}</li>
                 <li class="list-group-item">Email: {{student.user.email}}</li>
                 <li class="list-group-item">Phone: {{student.phone}}</li>
                 <li class="list-group-item">Age: {{age}}</li>
@@ -38,25 +31,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    let userSelectInput = document.getElementById('id_user').style.display = "none";
-    {% comment %} let imageInput = document.getElementById('id_image').style.display = "none"; {% endcomment %}
-
-    function editImge(){
-        let fileInput = document.getElementById('id_image').click();
-        //userSelectInput.value = 1
-        //imageInput.value = fileInput.value
-    }
-
-    fileInput.addEventListener('change', (event) => {
-        let submitBtn = document.getElementById('submtbtn')
-        submitBtn.click();
-    })
-    
-    //function submitImage(){
-    //}
-</script>
 
 {% endblock %}
 
