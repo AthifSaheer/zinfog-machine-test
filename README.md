@@ -1,4 +1,4 @@
-# Techbyheart Machine Test
+# Zinfog codelabs Machine Test
 This is machine test of Zinfog codelabs. Used technology Django and HTML, CSS and JS.
 
 - Clone The project :- https://github.com/AthifSaheer/zinfog-machine-test/
